@@ -12,7 +12,8 @@ use Params::Util qw( _STRING );
 use MooseX::Types::Moose qw( Int Str );
 use WiX3::Util::StrictConstructor;
 
-use version; our $VERSION = version->new('0.005')->numify;
+our $VERSION = '0.006';
+$VERSION = eval { return $VERSION };
 
 with 'WiX3::XML::Role::TagAllowsChildTags';
 ## Allows Component, Directory, Merge as children.
@@ -21,22 +22,21 @@ with 'WiX3::XML::Role::TagAllowsChildTags';
 # Accessors:
 #   None.
 
-has _directory_object => (
+has directory_object => (
 	is       => 'ro',
 	isa      => 'WiX3::XML::Directory',
 	reader   => '_get_directory_object',
-	init_arg => 'directory_object',
 	required => 1,
 	handles  => [qw(get_path get_directory_id)],
 );
 
-has _diskid => (
+has diskid => (
 	is     => 'ro',
 	isa    => Int,
 	reader => '_get_diskid',
 );
 
-has _filesource => (
+has filesource => (
 	is     => 'ro',
 	isa    => Str,
 	reader => '_get_filesource',
@@ -48,7 +48,7 @@ has _filesource => (
 sub as_string {
 	my $self = shift;
 
-	my $children = $self->has_children();
+	my $children = $self->has_child_tags();
 	my $tags;
 	$tags = $self->print_attribute( 'Id', $self->get_directory_id() );
 	$tags .= $self->print_attribute( 'DiskId', $self->_get_diskid() );
@@ -57,7 +57,7 @@ sub as_string {
 
 	if ($children) {
 		my $child_string = $self->as_string_children();
-		return qq{<DirectoryRef$tags>\n$child_string</DirectoryRef>\n};
+		return qq{<DirectoryRef$tags>\n$child_string\n</DirectoryRef>\n};
 	} else {
 		return qq{<DirectoryRef$tags />\n};
 	}

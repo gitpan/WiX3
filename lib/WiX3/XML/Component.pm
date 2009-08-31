@@ -12,13 +12,17 @@ use Params::Util qw( _STRING );
 use WiX3::Types qw( YesNoType ComponentGuidType );
 use MooseX::Types::Moose qw( Str Maybe Int );
 use WiX3::Util::StrictConstructor;
-use WiX3::XML::GeneratesGUID::Object;
 
-use version; our $VERSION = version->new('0.005')->numify;
+our $VERSION = '0.006';
+$VERSION = eval { return $VERSION };
 
 # http://wix.sourceforge.net/manual-wix3/wix_xsd_component.htm
 
-with 'WiX3::XML::Role::TagAllowsChildTags';
+with qw(WiX3::XML::Role::TagAllowsChildTags
+  WiX3::XML::Role::GeneratesGUID
+  WiX3::Role::Traceable
+);
+
 ## Allows lots of children: Choice of elements AppId, Category, Class,
 ## Condition, CopyFile, CreateFolder, Environment, Extension, File, IniFile,
 ## Interface, IsolateComponent, ODBCDataSource, ODBCDriver, ODBCTranslator,
@@ -31,13 +35,12 @@ with 'WiX3::XML::Role::TagAllowsChildTags';
 # Accessors:
 #   None.
 
-#__PACKAGE__->meta->error_class('WiX3::Util::Error');
-
 has id => (
-	is       => 'ro',
-	isa      => Str,
-	reader   => 'get_id',
-	required => 1,
+	is      => 'ro',
+	isa     => Str,
+	reader  => 'get_id',
+	builder => 'id_build',
+	lazy    => 1,
 );
 
 has complusflags => (
@@ -78,15 +81,12 @@ has feature => (
 );
 
 has guid => (
-	is      => 'ro',
-	isa     => ComponentGuidType,
-	reader  => '_get_guid',
-	lazy    => 1,
-	default => sub {
-		my $self = shift;
-		return WiX3::XML::GeneratesGUID::Object->instance()
-		  ->generate_guid( $self->get_id() );
-	},
+	is       => 'ro',
+	isa      => ComponentGuidType,
+	reader   => 'get_guid',
+	lazy     => 1,
+	init_arg => undef,
+	builder  => 'guid_build',
 );
 
 has keypath => (
@@ -107,6 +107,13 @@ has neveroverwrite => (
 	is      => 'ro',
 	isa     => Maybe [YesNoType],
 	reader  => '_get_neveroverwrite',
+	default => undef,
+);
+
+has path => (
+	is      => 'ro',
+	isa     => Maybe [Str],
+	reader  => 'get_path',
 	default => undef,
 );
 
@@ -159,6 +166,31 @@ has win64 => (
 #####################################################################
 # Methods to implement the Tag role.
 
+sub BUILDARGS {
+	my $class = shift;
+	my %args;
+
+	if ( @_ == 1 && 'HASH' eq ref $_[0] ) {
+		%args = %{ $_[0] };
+	} elsif ( 0 == @_ % 2 ) {
+		%args = @_;
+	} else {
+		WiX3::Exception::Parameter::Odd->throw("$class->new");
+	}
+
+	if ( defined $args{'guid'} ) {
+
+		# TODO: Throw exception.
+	}
+
+	if ( not( defined $args{'id'} or defined $args{'path'} ) ) {
+		WiX3::Exception::Parameter->throw(
+			"Either id or path required in $class->new");
+	}
+
+	return \%args;
+} ## end sub BUILDARGS
+
 sub as_string {
 	my $self = shift;
 
@@ -172,7 +204,7 @@ sub as_string {
 
 	my @attribute = (
 		[ 'Id'           => $id, ],
-		[ 'Guid'         => $self->_get_guid(), ],
+		[ 'Guid'         => $self->get_guid(), ],
 		[ 'ComPlusFlags' => $self->_get_complusflags(), ],
 		[ 'Directory'    => $self->_get_directory(), ],
 		[   'DisableRegistryReflection' =>
@@ -201,7 +233,7 @@ sub as_string {
 	}
 
 	if ($children) {
-		$string .= qq{>\n$child_string\n<Component />\n};
+		$string .= qq{>\n$child_string\n</Component>\n};
 	} else {
 		$string .= qq{ />\n};
 	}

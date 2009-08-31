@@ -12,7 +12,8 @@ use WiX3::Types qw( YesNoType PositiveInt NonNegativeInt );
 use MooseX::Types::Moose qw( Str Maybe Int );
 use WiX3::Util::StrictConstructor;
 
-use version; our $VERSION = version->new('0.005')->numify;
+our $VERSION = '0.006';
+$VERSION = eval { return $VERSION };
 
 with 'WiX3::XML::Role::TagAllowsChildTags';
 
@@ -252,9 +253,9 @@ has _vital => (
 sub as_string {
 	my $self = shift;
 
-	my $children = $self->has_children();
+	my $children = $self->has_child_tags();
 	my $tags;
-	$tags = $self->print_attribute( 'Id', $self->get_file_id() );
+	$tags = $self->print_attribute( 'Id', 'F_' . $self->get_id() );
 	$tags .= $self->print_attribute( 'Name',     $self->get_name() );
 	$tags .= $self->print_attribute( 'DiskId',   $self->_get_diskid() );
 	$tags .= $self->print_attribute( 'Assembly', $self->_get_assembly() );

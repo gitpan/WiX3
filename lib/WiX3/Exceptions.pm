@@ -4,7 +4,8 @@ use 5.008001;
 use strict;
 use warnings;
 
-use version; our $VERSION = version->new('0.005')->numify;
+our $VERSION = '0.006';
+$VERSION = eval { return $VERSION };
 
 use Exception::Class 1.29 (
 	'WiX3::Exception' => {
@@ -43,6 +44,10 @@ use Exception::Class 1.29 (
 	},
 
 );
+
+#sub WiX3::Exception::as_string { ## no critic 'Capitalization'
+#	return q{};
+#}
 
 sub WiX3::Exception::full_message { ## no critic 'Capitalization'
 	my $self = shift;

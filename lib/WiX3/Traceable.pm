@@ -1,16 +1,17 @@
 package WiX3::Traceable;
 
 use 5.008001;
-
-# Must be done before Moose, or it won't get picked up.
 use metaclass (
-	metaclass   => 'Moose::Meta::Class',
+	base_class  => 'MooseX::Singleton::Object',
+	metaclass   => 'MooseX::Singleton::Meta::Class',
 	error_class => 'WiX3::Util::Error',
 );
-use Moose;
+use MooseX::Singleton;
 use WiX3::Util::StrictConstructor;
+use WiX3::Trace::Config;
 
-use version; our $VERSION = version->new('0.005')->numify;
+our $VERSION = '0.006';
+$VERSION = eval { return $VERSION };
 
 with 'WiX3::Role::Traceable';
 
@@ -24,7 +25,7 @@ sub BUILDARGS {
 		%args = (@_);
 	}
 
-	return { options => \%args };
+	return { options => WiX3::Trace::Config->new(%args) };
 } ## end sub BUILDARGS
 
 sub BUILD {
@@ -35,9 +36,6 @@ sub BUILD {
 
 	return;
 }
-
-no Moose;
-__PACKAGE__->meta->make_immutable;
 
 1;
 

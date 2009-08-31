@@ -20,7 +20,8 @@ use WiX3::Types qw( YesNoType );
 use MooseX::Types::Moose qw( Str Maybe );
 use WiX3::Util::StrictConstructor;
 
-use version; our $VERSION = version->new('0.005')->numify;
+our $VERSION = '0.006';
+$VERSION = eval { return $VERSION };
 
 # http://wix.sourceforge.net/manual-wix3/wix_xsd_environment.htm
 
@@ -35,7 +36,7 @@ with 'WiX3::XML::Role::Tag';
 has id => (
 	is       => 'ro',
 	isa      => Str,
-	reader   => '_get_id',
+	reader   => 'get_id',
 	required => 1,
 );
 
@@ -73,7 +74,7 @@ has permanent => (
 	is      => 'ro',
 	isa     => YesNoType,
 	reader  => '_get_permanent',
-	default => 'all',
+	default => 'yes',
 );
 
 has system => (

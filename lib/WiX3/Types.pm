@@ -2,16 +2,15 @@ package                                # Hide from PAUSE.
   WiX3::Types;
 
 use 5.008001;
-use strict;
-use warnings;
-use Regexp::Common 2.105;
 use MooseX::Types -declare => [ qw(
 	  Host Tracelevel IsTag _YesNoType YesNoType ComponentGuidType PositiveInt
-	  NonNegativeInt
+	  NonNegativeInt TraceConfig TraceObject
 	  ) ];
-use MooseX::Types::Moose qw(Str Int Bool);
+use Regexp::Common 2.105;
+use MooseX::Types::Moose qw( Str Int Bool HashRef );
 
-use version; our $VERSION = version->new('0.005')->numify;
+our $VERSION = '0.006';
+$VERSION = eval { return $VERSION };
 
 subtype Host, as Str, where {
 	$_ =~ /\A$RE{net}{IPv4}\z/msx
@@ -21,6 +20,10 @@ subtype Host, as Str, where {
 };
 
 subtype IsTag, as role_type 'WiX3::XML::Role::Tag';
+
+subtype TraceConfig, as class_type 'WiX3::Trace::Config';
+
+subtype TraceObject, as class_type 'WiX3::Trace::Object';
 
 subtype Tracelevel,
   as Int,

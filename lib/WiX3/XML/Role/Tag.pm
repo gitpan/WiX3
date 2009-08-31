@@ -5,9 +5,9 @@ use Moose::Role;
 use Params::Util qw( _STRING _NONNEGINT );
 use vars qw( $VERSION );
 use WiX3::Exceptions;
-use List::MoreUtils qw( uniq );
 
-use version; our $VERSION = version->new('0.005')->numify;
+our $VERSION = '0.006';
+$VERSION = eval { return $VERSION };
 
 #####################################################################
 # Methods
@@ -31,19 +31,19 @@ sub indent {
 
 	# Check parameters.
 	if ( not defined $string ) {
-		XWC::Exception::Parameter::Missing->throw('string');
+		WiX3::Exception::Parameter::Missing->throw('string');
 	}
 
 	if ( not defined $spaces_num ) {
-		XWC::Exception::Parameter::Missing->throw('spaces_num');
+		WiX3::Exception::Parameter::Missing->throw('spaces_num');
 	}
 
 	if ( not defined _STRING($string) ) {
-		XWC::Exception::Parameter::Invalid->throw('string');
+		WiX3::Exception::Parameter::Invalid->throw('string');
 	}
 
 	if ( not defined _NONNEGINT($spaces_num) ) {
-		XWC::Exception::Parameter::Invalid->throw('spaces_num');
+		WiX3::Exception::Parameter::Invalid->throw('spaces_num');
 	}
 
 	# Indent string.
@@ -58,24 +58,7 @@ sub indent {
 	return $answer;
 } ## end sub indent
 
-sub get_namespaces {
-	my $self = shift;
-
-	my @namespaces = ( $self->get_namespace() );
-	my $count      = $self->count_child_tags();
-
-	if ( 0 == $count ) {
-		return @namespaces;
-	}
-
-	foreach my $tag ( $self->get_child_tags() ) {
-		push @namespaces, $tag->get_namespaces();
-	}
-
-	return uniq @namespaces;
-} ## end sub get_namespaces
-
-sub get_component_array {
+sub get_componentref_array {
 	my $self = shift;
 
 	my @components;
@@ -87,14 +70,20 @@ sub get_component_array {
 
 	foreach my $tag ( $self->get_child_tags() ) {
 		if ( $tag->meta()->does_role('WiX3::XML::Role::Component') ) {
-			push @components, $tag->get_component_id();
+			push @components, WiX3::XML::ComponentRef->new($tag);
+		} elsif ( $tag->meta()->isa('WiX3::XML::Feature') ) {
+			push @components, WiX3::XML::FeatureRef->new($tag);
+		} elsif (
+			$tag->meta()->does_role('WiX3::XML::Role::TagAllowsChildTags') )
+		{
+			push @components, $tag->get_componentref_array();
 		} else {
-			push @components, $tag->get_component_array();
+			return ();
 		}
-	}
+	} ## end foreach my $tag ( $self->get_child_tags...)
 
 	return @components;
-} ## end sub get_component_array
+} ## end sub get_componentref_array
 
 sub print_attribute {
 	my $self      = shift;

@@ -9,10 +9,11 @@ use metaclass (
 );
 use Moose;
 use Params::Util qw( _STRING  );
-use MooseX::Types::Moose qw( Str      );
+use MooseX::Types::Moose qw( Str );
 use WiX3::Util::StrictConstructor;
 
-use version; our $VERSION = version->new('0.005')->numify;
+our $VERSION = '0.006';
+$VERSION = eval { return $VERSION };
 
 # http://wix.sourceforge.net/manual-wix3/wix_xsd_icon.htm
 
