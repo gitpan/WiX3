@@ -8,12 +8,12 @@ use metaclass (
 	error_class => 'WiX3::Util::Error',
 );
 use Moose;
-use Params::Util qw( _STRING );
+use Params::Util qw( _INSTANCE );
 use MooseX::Types::Moose qw( Int Str );
 use WiX3::Util::StrictConstructor;
 
-our $VERSION = '0.006';
-$VERSION = eval { return $VERSION };
+our $VERSION = '0.007';
+$VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
 
 with 'WiX3::XML::Role::TagAllowsChildTags';
 ## Allows Component, Directory, Merge as children.
@@ -27,6 +27,7 @@ has directory_object => (
 	isa      => 'WiX3::XML::Directory',
 	reader   => '_get_directory_object',
 	required => 1,
+	weak_ref => 1,
 	handles  => [qw(get_path get_directory_id)],
 );
 
@@ -44,6 +45,17 @@ has filesource => (
 
 #####################################################################
 # Methods to implement the Tag role.
+
+sub BUILDARGS {
+	my $class = shift;
+
+	if ( @_ == 1 && _INSTANCE( $_[0], 'WiX3::XML::Directory' ) ) {
+		return { directory_object => $_[0] };
+	} else {
+		return $class->SUPER::BUILDARGS(@_);
+	}
+}
+
 
 sub as_string {
 	my $self = shift;

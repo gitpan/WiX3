@@ -27,6 +27,7 @@ lib/WiX3/XML/Fragment.pm
 lib/WiX3/XML/Fragment/CreateFolder.pm
 lib/WiX3/XML/GeneratesGUID/Object.pm
 lib/WiX3/XML/Icon.pm
+lib/WiX3/XML/RemoveFolder.pm
 lib/WiX3/XML/Role/Fragment.pm
 lib/WiX3/XML/Role/GeneratesGUID.pm
 lib/WiX3/XML/Role/Tag.pm

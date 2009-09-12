@@ -13,8 +13,8 @@ use MooseX::Types::Moose qw( Str Maybe );
 use WiX3::Types qw( YesNoType );
 use WiX3::Util::StrictConstructor;
 
-our $VERSION = '0.006';
-$VERSION = eval { return $VERSION };
+our $VERSION = '0.007';
+$VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
 
 # http://wix.sourceforge.net/manual-wix3/wix_xsd_componentref.htm
 
@@ -55,7 +55,8 @@ sub BUILDARGS {
 		WiX3::Exception::Parameter::Missing->throw('id');
 	}
 
-	if ( not defined _IDENTIFIER($id) ) {
+	if ( not defined _IDENTIFIER("C_$id") ) {
+		print "Invalid ID: $id\n";
 		WiX3::Exception::Parameter::Invalid->throw('id');
 	}
 

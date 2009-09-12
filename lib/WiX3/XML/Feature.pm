@@ -20,8 +20,8 @@ use WiX3::Types qw( YesNoType );
 use MooseX::Types::Moose qw( Str Int Maybe );
 use WiX3::Util::StrictConstructor;
 
-our $VERSION = '0.006';
-$VERSION = eval { return $VERSION };
+our $VERSION = '0.007';
+$VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
 
 # http://wix.sourceforge.net/manual-wix3/wix_xsd_feature.htm
 
@@ -128,11 +128,11 @@ has _typical_default => (
 sub as_string {
 	my $self = shift;
 
-	my $children = $self->has_children();
+	my $children = $self->has_child_tags();
 	my $tags;
 
 	# Print tag.
-	$tags .= $self->print_attribute( 'Id',     $self->get_id() );
+	$tags .= $self->print_attribute( 'Id',     'Feat_' . $self->get_id() );
 	$tags .= $self->print_attribute( 'Absent', $self->_get_absent() );
 	$tags .=
 	  $self->print_attribute( 'AllowAdvertise',
@@ -154,9 +154,9 @@ sub as_string {
 
 	if ($children) {
 		my $child_string = $self->as_string_children();
-		return qq{<Fragment$tags>\n$child_string</Fragment>\n};
+		return qq{<Feature$tags>\n$child_string\n</Feature>\n};
 	} else {
-		return qq{<Fragment$tags />\n};
+		return qq{<Feature$tags />\n};
 	}
 } ## end sub as_string
 
@@ -173,7 +173,7 @@ __END__
 
 =head1 NAME
 
-WiX3::XML::Feature - Defines a Icon tag.
+WiX3::XML::Feature - Defines a Feature tag.
 
 =head1 VERSION
 

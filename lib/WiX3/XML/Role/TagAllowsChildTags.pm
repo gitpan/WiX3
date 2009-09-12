@@ -8,8 +8,8 @@ use MooseX::AttributeHelpers;
 use MooseX::Types::Moose qw(ArrayRef);
 use List::MoreUtils qw( uniq );
 
-our $VERSION = '0.006';
-$VERSION = eval { return $VERSION };
+our $VERSION = '0.007';
+$VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
 
 with 'WiX3::XML::Role::Tag';
 
@@ -78,6 +78,21 @@ sub get_namespaces {
 	return uniq @namespaces;
 } ## end sub get_namespaces
 
+sub count_all_child_tags {
+	my $self = shift;
+
+	my $answer = 1;
+
+	foreach my $tag ( $self->get_child_tags() ) {
+		if ( $tag->does('count_all_child_tags') ) {
+			$answer += $tag->count_all_child_tags();
+		} else {
+			$answer++;
+		}
+	}
+
+	return $answer;
+} ## end sub count_all_child_tags
 
 no Moose::Role;
 

@@ -3,11 +3,12 @@ package WiX3::XML::Role::Tag;
 use 5.008001;
 use Moose::Role;
 use Params::Util qw( _STRING _NONNEGINT );
-use vars qw( $VERSION );
 use WiX3::Exceptions;
+require WiX3::XML::ComponentRef;
+require WiX3::XML::FeatureRef;
 
-our $VERSION = '0.006';
-$VERSION = eval { return $VERSION };
+our $VERSION = '0.007';
+$VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
 
 #####################################################################
 # Methods
@@ -64,23 +65,25 @@ sub get_componentref_array {
 	my @components;
 	my $count = $self->count_child_tags();
 
+	if ( $self->isa('WiX3::XML::Component') ) {
+		return WiX3::XML::ComponentRef->new($self);
+	}
+
+	if ( $self->isa('WiX3::XML::Feature') ) {
+		return WiX3::XML::FeatureRef->new($self);
+	}
+
 	if ( 0 == $count ) {
 		return ();
 	}
 
 	foreach my $tag ( $self->get_child_tags() ) {
-		if ( $tag->meta()->does_role('WiX3::XML::Role::Component') ) {
-			push @components, WiX3::XML::ComponentRef->new($tag);
-		} elsif ( $tag->meta()->isa('WiX3::XML::Feature') ) {
-			push @components, WiX3::XML::FeatureRef->new($tag);
-		} elsif (
-			$tag->meta()->does_role('WiX3::XML::Role::TagAllowsChildTags') )
-		{
+		if ( $tag->does('WiX3::XML::Role::TagAllowsChildTags') ) {
 			push @components, $tag->get_componentref_array();
 		} else {
 			return ();
 		}
-	} ## end foreach my $tag ( $self->get_child_tags...)
+	}
 
 	return @components;
 } ## end sub get_componentref_array
@@ -94,7 +97,7 @@ sub print_attribute {
 		WiX3::Exception::Parameter::Missing->throw('attribute');
 	}
 
-	# $attribute needs to be an identifier.
+	# TODO: $attribute needs to be an identifier.
 
 	if ( not defined $value ) {
 		return q{};

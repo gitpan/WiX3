@@ -4,8 +4,8 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = '0.006';
-$VERSION = eval { return $VERSION };
+our $VERSION = '0.007';
+$VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
 
 use Exception::Class 1.29 (
 	'WiX3::Exception' => {
@@ -45,11 +45,11 @@ use Exception::Class 1.29 (
 
 );
 
-#sub WiX3::Exception::as_string { ## no critic 'Capitalization'
+#sub WiX3::Exception::as_string {
 #	return q{};
 #}
 
-sub WiX3::Exception::full_message { ## no critic 'Capitalization'
+sub WiX3::Exception::full_message {
 	my $self = shift;
 
 	my $string =
@@ -71,8 +71,7 @@ sub WiX3::Exception::full_message { ## no critic 'Capitalization'
 	return $string;
 } ## end sub WiX3::Exception::full_message
 
-sub WiX3::Exception::Unimplemented::full_message
-{ ## no critic 'Capitalization'
+sub WiX3::Exception::Unimplemented::full_message {
 	my $self = shift;
 
 	my $string =
@@ -92,7 +91,7 @@ sub WiX3::Exception::Unimplemented::full_message
 	return $string;
 } ## end sub WiX3::Exception::Unimplemented::full_message
 
-sub WiX3::Exception::Parameter::full_message { ## no critic 'Capitalization'
+sub WiX3::Exception::Parameter::full_message {
 	my $self = shift;
 
 	my $string =
@@ -112,8 +111,7 @@ sub WiX3::Exception::Parameter::full_message { ## no critic 'Capitalization'
 	return $string;
 } ## end sub WiX3::Exception::Parameter::full_message
 
-sub WiX3::Exception::Parameter::Validation::full_message
-{ ## no critic 'Capitalization'
+sub WiX3::Exception::Parameter::Validation::full_message {
 	my $self = shift;
 
 	my $string =
@@ -141,7 +139,7 @@ sub WiX3::Exception::Parameter::Validation::full_message
 
 
 
-sub WiX3::Exception::Caught::full_message { ## no critic 'Capitalization'
+sub WiX3::Exception::Caught::full_message {
 	my $self = shift;
 
 	my $string =

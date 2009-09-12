@@ -8,13 +8,13 @@ use metaclass (
 	error_class => 'WiX3::Util::Error',
 );
 use Moose;
-use Params::Util qw( _STRING );
+use Params::Util qw( _STRING _IDENTIFIER );
 use WiX3::Types qw( YesNoType ComponentGuidType );
 use MooseX::Types::Moose qw( Str Maybe Int );
 use WiX3::Util::StrictConstructor;
 
-our $VERSION = '0.006';
-$VERSION = eval { return $VERSION };
+our $VERSION = '0.007';
+$VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
 
 # http://wix.sourceforge.net/manual-wix3/wix_xsd_component.htm
 
@@ -188,6 +188,12 @@ sub BUILDARGS {
 			"Either id or path required in $class->new");
 	}
 
+	if ( defined $args{id} and not defined _IDENTIFIER("C_$args{id}") ) {
+		print "Invalid ID: $args{id}\n";
+		WiX3::Exception::Parameter::Invalid->throw('id');
+	}
+
+
 	return \%args;
 } ## end sub BUILDARGS
 
@@ -276,7 +282,7 @@ This document describes WiX3::XML::Component version 0.005
 
 =head1 SYNOPSIS
 
-	my $component = new XML::WiX3::Classes::Component(
+	my $component = new WiX3::XML::Component(
 		id => 'MyComponent',
 		
 	);

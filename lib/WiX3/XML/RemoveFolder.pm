@@ -1,4 +1,4 @@
-package WiX3::XML::Shortcut;
+package WiX3::XML::RemoveFolder;
 
 use 5.008001;
 
@@ -9,60 +9,20 @@ use metaclass (
 );
 use Moose;
 use Params::Util qw( _STRING  );
-use MooseX::Types::Moose qw( Str Int Maybe );
-use WiX3::Types qw( YesNoType );
+use MooseX::Types::Moose qw( Maybe Str );
+use WiX3::Types qw( EnumRemoveFolderOn );
 use WiX3::Util::StrictConstructor;
 
 our $VERSION = '0.007';
 $VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
 
-# http://wix.sourceforge.net/manual-wix3/wix_xsd_shortcut.htm
-
 with 'WiX3::XML::Role::Tag';
 
-## Allows no child tags.
+# http://wix.sourceforge.net/manual-wix3/wix_xsd_createfolder.htm
 
-has id => (
-	is       => 'ro',
-	isa      => Str,
-	reader   => 'get_id',
-	required => 1,
-);
-
-has advertise => (
-	is      => 'ro',
-	isa     => Maybe [YesNoType],
-	reader  => '_get_advertise',
-	default => undef,
-);
-
-has arguments => (
-	is      => 'ro',
-	isa     => Maybe [Str],
-	reader  => '_get_arguments',
-	default => undef,
-);
-
-has description => (
-	is      => 'ro',
-	isa     => Maybe [Str],
-	reader  => '_get_description',
-	default => undef,
-);
-
-has descriptionresourcedll => (
-	is      => 'ro',
-	isa     => Maybe [Str],
-	reader  => '_get_descriptionresourcedll',
-	default => undef,
-);
-
-has descriptionresourceid => (
-	is      => 'ro',
-	isa     => Maybe [Int],
-	reader  => '_get_descriptionresourceid',
-	default => undef,
-);
+#####################################################################
+# Accessors:
+#   None.
 
 has directory => (
 	is      => 'ro',
@@ -71,107 +31,39 @@ has directory => (
 	default => undef,
 );
 
-has displayresourcedll => (
+has property => (
 	is      => 'ro',
 	isa     => Maybe [Str],
-	reader  => '_get_displayresourcedll',
+	reader  => '_get_property',
 	default => undef,
 );
 
-has displayresourceid => (
-	is      => 'ro',
-	isa     => Maybe [Int],
-	reader  => '_get_displayresourceid',
-	default => undef,
-);
-
-has hotkey => (
-	is      => 'ro',
-	isa     => Maybe [Int],
-	reader  => '_get_hotkey',
-	default => undef,
-);
-
-has icon => (
-	is      => 'ro',
-	isa     => Maybe [Str],
-	reader  => '_get_icon',
-	default => undef,
-);
-
-has iconindex => (
-	is      => 'ro',
-	isa     => Maybe [Int],
-	reader  => '_get_iconindex',
-	default => undef,
-);
-
-has name => (
+has id => (
 	is       => 'ro',
-	isa      => Maybe [Str],
-	reader   => '_get_name',
+	isa      => Str,
+	reader   => 'get_id',
 	required => 1,
 );
 
-has shortname => (
-	is      => 'ro',
-	isa     => Maybe [Str],
-	reader  => '_get_shortname',
-	default => undef,
-);
-
-has show => (
-	is      => 'ro',
-	isa     => Maybe [Str],
-	reader  => '_get_show',
-	default => undef,
-);
-
-has target => (
-	is      => 'ro',
-	isa     => Maybe [Str],
-	reader  => '_get_target',
-	default => undef,
-);
-
-has workingdirectory => (
-	is      => 'ro',
-	isa     => Maybe [Str],
-	reader  => '_get_workingdirectory',
-	default => undef,
+has on => (
+	is       => 'ro',
+	isa      => EnumRemoveFolderOn,
+	reader   => '_get_on',
+	required => 1,
 );
 
 #####################################################################
 # Methods to implement the Tag role.
 
 sub as_string {
-	my $self = shift;
-
-	my $id = 'S_' . $self->get_id();
-
-	my $string;
-	$string = '<Shortcut';
+	my $self   = shift;
+	my $string = '<RemoveFolder';
 
 	my @attribute = (
-		[ 'Id'          => $id, ],
-		[ 'Advertise'   => $self->_get_advertise(), ],
-		[ 'Arguments'   => $self->_get_arguments(), ],
-		[ 'Description' => $self->_get_description(), ],
-		[   'DescriptionResourceDll' =>
-			  $self->_get_descriptionresourcedll(),
-		],
-		[ 'DescriptionResourceId' => $self->_get_descriptionresourceid(), ],
-		[ 'Directory'             => $self->_get_directory(), ],
-		[ 'DisplayResourceDll'    => $self->_get_displayresourcedll(), ],
-		[ 'DisplayResourceId'     => $self->_get_displayresourceid(), ],
-		[ 'Hotkey'                => $self->_get_hotkey(), ],
-		[ 'Icon'                  => $self->_get_icon(), ],
-		[ 'IconIndex'             => $self->_get_iconindex(), ],
-		[ 'Name'                  => $self->_get_name(), ],
-		[ 'ShortName'             => $self->_get_shortname(), ],
-		[ 'Show'                  => $self->_get_show(), ],
-		[ 'Target'                => $self->_get_target(), ],
-		[ 'WorkingDirectory'      => $self->_get_workingdirectory(), ],
+		[ 'Id'        => $self->get_id(), ],
+		[ 'On'        => $self->_get_on(), ],
+		[ 'Directory' => $self->_get_directory(), ],
+		[ 'Property'  => $self->_get_property(), ],
 	);
 
 	my ( $k, $v );
@@ -200,11 +92,11 @@ __END__
 
 =head1 NAME
 
-WiX3::XML::Shortcut - Defines a Shortcut tag.
+WiX3::XML::RemoveFolder - Defines a RemoveFolder tag.
 
 =head1 VERSION
 
-This document describes WiX3::XML::Shortcut version 0.006
+This document describes WiX3::XML::RemoveFolder version 0.005
 
 =head1 SYNOPSIS
 

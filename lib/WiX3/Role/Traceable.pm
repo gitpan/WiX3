@@ -6,14 +6,15 @@ use WiX3::Trace::Object;
 use WiX3::Trace::Config;
 use WiX3::Types qw( TraceConfig TraceObject );
 
-our $VERSION = '0.006';
-$VERSION = eval { return $VERSION };
+our $VERSION = '0.007';
+$VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
 
 has _traceconfig => (
 	is       => 'ro',
 	isa      => TraceConfig,
 	reader   => '_get_traceconfig',
 	init_arg => 'options',
+	weak_ref => 1,
 	default  => sub { WiX3::Trace::Config->new() },
 );
 
@@ -22,6 +23,7 @@ has _traceobject => (
 	isa      => TraceObject,
 	lazy     => 1,
 	init_arg => undef,
+	weak_ref => 1,
 	builder  => '_setup_traceobject',
 	handles =>
 	  [qw(get_tracelevel set_tracelevel get_testing trace_line log)],
