@@ -6,7 +6,6 @@ eg/tryout3.pl
 lib/WiX3.pm
 lib/WiX3/Exceptions.pm
 lib/WiX3/Role/Traceable.pm
-lib/WiX3/Trace/Config.pm
 lib/WiX3/Trace/Object.pm
 lib/WiX3/Traceable.pm
 lib/WiX3/Types.pm
@@ -53,6 +52,7 @@ t/803_minimumversion.t
 t/804_manifest.t
 t/805_meta.t
 t/806_portability.t
+t/807_version.t
 t/899_prereq.t
 t/settings/perlcritic.txt
 t/settings/perltidy.txt

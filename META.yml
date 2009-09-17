@@ -1,6 +1,6 @@
 ---
 name: WiX3
-version: 0.007
+version: 0.008
 author:
   - 'Curtis Jewell <csjewell@cpan.org>'
 abstract: Objects useful for generating Windows Installer XML files.
@@ -18,35 +18,32 @@ requires:
   Data::UUID: 1.202
   Exception::Class: 1.29
   List::MoreUtils: '>= 0.22, != 0.23, != 0.24'
-  Moose: 0.86
-  MooseX::AttributeHelpers: 0.19
-  MooseX::LogDispatch: 1.2000
-  MooseX::NonMoose: 0.05
-  MooseX::Singleton: 0.19
-  MooseX::Types: 0.16
+  Moose: 0.90
+  MooseX::AttributeHelpers: 0.22
+  MooseX::Singleton: 0.21
+  MooseX::Types: 0.20
   MooseX::Types::Moose: 0
   Params::Util: 1.00
   Readonly: 1.03
   Regexp::Common: 2.122
   perl: 5.008001
 recommends:
-  MIME::Lite: 3.020
   Readonly::XS: 1.05
 configure_requires:
   Module::Build: 0.33
 provides:
   WiX3:
     file: lib/WiX3.pm
-    version: 0.007
+    version: 0.008
   WiX3::Exceptions:
     file: lib/WiX3/Exceptions.pm
     version: 0.007
   WiX3::Role::Traceable:
     file: lib/WiX3/Role/Traceable.pm
-    version: 0.007
+    version: 0.008
   WiX3::Traceable:
     file: lib/WiX3/Traceable.pm
-    version: 0.007
+    version: 0.008
   WiX3::XML::Component:
     file: lib/WiX3/XML/Component.pm
     version: 0.007
@@ -101,7 +98,7 @@ provides:
   WiX3::XML::Shortcut:
     file: lib/WiX3/XML/Shortcut.pm
     version: 0.007
-generated_by: Module::Build version 0.34
+generated_by: Module::Build version 0.35
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4

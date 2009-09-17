@@ -1,16 +1,17 @@
 package WiX3::Traceable;
 
 use 5.008001;
-use metaclass (
-	base_class  => 'MooseX::Singleton::Object',
-	metaclass   => 'MooseX::Singleton::Meta::Class',
-	error_class => 'WiX3::Util::Error',
-);
+
+#use metaclass (
+#	base_class  => 'MooseX::Singleton::Object',
+#	metaclass   => 'MooseX::Singleton::Meta::Class',
+#	error_class => 'WiX3::Util::Error',
+#);
 use MooseX::Singleton;
 use WiX3::Util::StrictConstructor;
-use WiX3::Trace::Config;
+use WiX3::Trace::Object;
 
-our $VERSION = '0.007';
+our $VERSION = '0.008';
 $VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
 
 with 'WiX3::Role::Traceable';
@@ -25,7 +26,7 @@ sub BUILDARGS {
 		%args = (@_);
 	}
 
-	return { options => WiX3::Trace::Config->new(%args) };
+	return { options => WiX3::Trace::Object->new(%args) };
 } ## end sub BUILDARGS
 
 sub BUILD {
@@ -43,7 +44,7 @@ __END__
 
 =head1 NAME
 
-WiX3::Traceable - "Cheat Class" in order to get a Traceable object.
+WiX3::Traceable - "Cheat Class" in order to initialize a Traceable object.
 
 =head1 VERSION
 
@@ -51,7 +52,10 @@ This document describes WiX3::Traceable version 0.005
 
 =head1 SYNOPSIS
 
-TODO
+	WiX3::Traceable->new(
+		tracelevel => 2,
+		testing => 0,
+	);
   
 =head1 DESCRIPTION
 
