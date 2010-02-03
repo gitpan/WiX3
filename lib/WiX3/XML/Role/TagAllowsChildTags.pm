@@ -1,15 +1,14 @@
 package WiX3::XML::Role::TagAllowsChildTags;
 
 use 5.008001;
-use Moose::Role;
+use Moose::Role 0.90;
 use WiX3::Exceptions;
 use WiX3::Types qw(IsTag);
-use MooseX::AttributeHelpers;
 use MooseX::Types::Moose qw(ArrayRef);
 use List::MoreUtils qw( uniq );
 
-our $VERSION = '0.007';
-$VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
+our $VERSION = '0.009';
+$VERSION =~ s/_//ms;
 
 with 'WiX3::XML::Role::Tag';
 
@@ -18,19 +17,19 @@ with 'WiX3::XML::Role::Tag';
 
 # A tag can contain other tags.
 has child_tags => (
-	metaclass => 'Collection::Array',
-	is        => 'rw',
-	isa       => ArrayRef [IsTag],
-	init_arg  => undef,
-	default   => sub { return []; },
-	provides  => {
-		'elements' => 'get_child_tags',
-		'push'     => 'add_child_tag',
-		'get'      => 'get_child_tag',
-		'empty'    => 'has_child_tags',
-		'count'    => 'count_child_tags',
-		'delete'   => 'delete_child_tag',
-		'clear'    => 'clear_child_tags',
+	traits   => ['Array'],
+	is       => 'rw',
+	isa      => ArrayRef [IsTag],
+	init_arg => undef,
+	default  => sub { return []; },
+	handles  => {
+		'get_child_tags'   => 'elements',
+		'add_child_tag'    => 'push',
+		'get_child_tag'    => 'get',
+		'has_child_tags'   => 'count',
+		'count_child_tags' => 'count',
+		'delete_child_tag' => 'delete',
+		'clear_child_tags' => 'clear',
 	},
 );
 
@@ -106,7 +105,7 @@ WiX3::XML::Role::TagAllowsChildTags - Base role for XML tags that have children.
 
 =head1 VERSION
 
-This document describes WiX3::XML::Role::TagAllowsChildTags version 0.005
+This document describes WiX3::XML::Role::TagAllowsChildTags version 0.009
 
 =head1 SYNOPSIS
 
@@ -123,7 +122,7 @@ This is the base class for all WiX3 classes that represent XML tags.
 	$string = $tag->as_string_children();
 
 This routine returns a string of XML that contains the tag defined by this 
-object and all child tags, and is used by L<as_string>.
+object and all child tags, and is used by C<as_string>.
 
 =head1 DIAGNOSTICS
 
@@ -148,10 +147,11 @@ Curtis Jewell  C<< <csjewell@cpan.org> >>
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2009, Curtis Jewell C<< <csjewell@cpan.org> >>. All rights reserved.
+Copyright 2009, 2010 Curtis Jewell C<< <csjewell@cpan.org> >>.
 
 This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself. See L<perlartistic>.
+modify it under the same terms as Perl 5.8.1 itself. See L<perlartistic|perlartistic>.
+
 
 =head1 DISCLAIMER OF WARRANTY
 

@@ -2,11 +2,11 @@ package WiX3::Role::Traceable;
 
 use 5.008001;
 use Moose::Role 0.90;
-use WiX3::Trace::Object 0.008;
+use WiX3::Trace::Object 0.009;
 use WiX3::Types qw( TraceObject );
 
-our $VERSION = '0.008';
-$VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
+our $VERSION = '0.009';
+$VERSION =~ s/_//ms;
 
 has _traceobject => (
 	is       => 'bare',

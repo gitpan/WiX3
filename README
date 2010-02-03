@@ -1,4 +1,4 @@
-WiX3 Version 0.007
+WiX3 Version 0.009
 
 DESCRIPTION
     This distribution is designed to assist in writing XML files for Windows
@@ -38,9 +38,8 @@ WARNING
     state.
 
 LICENCE AND COPYRIGHT
-    Copyright (c) 2009, Curtis Jewell `<csjewell@cpan.org>'. All rights
-    reserved.
+    Copyright 2009, 2010 Curtis Jewell `<csjewell@cpan.org>'.
 
     This module is free software; you can redistribute it and/or modify it
-    under the same terms as Perl itself. See perlartistic.
+    under the same terms as Perl 5.8.1 itself. See perlartistic.
 

@@ -1,4 +1,4 @@
-package WiX3::XML::DirectoryRef;
+package WiX3::XML::Merge;
 
 use 5.008001;
 
@@ -8,71 +8,89 @@ use metaclass (
 	error_class => 'WiX3::Util::Error',
 );
 use Moose;
-use Params::Util qw( _INSTANCE );
-use MooseX::Types::Moose qw( Int Str );
 use WiX3::Util::StrictConstructor;
+use WiX3::Types qw( YesNoType );
+use MooseX::Types::Moose qw( Str Int Maybe );
 
 our $VERSION = '0.009';
 $VERSION =~ s/_//ms;
 
-with 'WiX3::XML::Role::TagAllowsChildTags';
-## Allows Component, Directory, Merge as children.
+# http://wix.sourceforge.net/manual-wix3/wix_xsd_merge.htm
 
-#####################################################################
-# Accessors:
-#   None.
+with 'WiX3::Role::Traceable';
+with 'WiX3::XML::Role::Tag';
 
-has directory_object => (
+has id => (
 	is       => 'ro',
-	isa      => 'WiX3::XML::Directory',
-	reader   => '_get_directory_object',
+	isa      => Str,
 	required => 1,
-	weak_ref => 1,
-	handles  => [qw(get_path get_directory_id)],
+	reader   => 'get_id',
 );
 
-has diskid => (
+has disk_id => (
+	is      => 'ro',
+	isa     => Maybe [Int],
+	reader  => '_get_disk_id',
+	default => 1,
+);
+
+has file_compression => (
+	is      => 'ro',
+	isa     => Maybe [Str],
+	reader  => '_get_file_compression',
+	default => undef,
+);
+
+has language => (
 	is     => 'ro',
 	isa    => Int,
-	reader => '_get_diskid',
+	reader => '_get_language',
 );
 
-has filesource => (
-	is     => 'ro',
-	isa    => Str,
-	reader => '_get_filesource',
+has source_file => (
+	is      => 'ro',
+	isa     => Maybe [Str],
+	reader  => '_get_source_file',
+	default => undef,
 );
+
 
 #####################################################################
-# Methods to implement the Tag role.
+# Main Methods
 
 sub BUILDARGS {
 	my $class = shift;
 
-	if ( @_ == 1 && _INSTANCE( $_[0], 'WiX3::XML::Directory' ) ) {
-		return { directory_object => $_[0] };
+	if ( @_ == 1 && !ref $_[0] ) {
+		return { id => $_[0] };
+	} elsif ( @_ == 1 && 'HASH' eq ref $_[0] ) {
+		return $_[0];
 	} else {
-		return $class->SUPER::BUILDARGS(@_);
+		my %hash = @_;
+		return \%hash;
 	}
-}
 
+	return;
+} ## end sub BUILDARGS
+
+#####################################################################
+# Methods to implement the Tag role.
 
 sub as_string {
 	my $self = shift;
 
-	my $children = $self->has_child_tags();
 	my $tags;
-	$tags = $self->print_attribute( 'Id', $self->get_directory_id() );
-	$tags .= $self->print_attribute( 'DiskId', $self->_get_diskid() );
-	$tags .=
-	  $self->print_attribute( 'FileSource', $self->_get_filesource() );
 
-	if ($children) {
-		my $child_string = $self->as_string_children();
-		return qq{<DirectoryRef$tags>\n$child_string\n</DirectoryRef>\n};
-	} else {
-		return qq{<DirectoryRef$tags />\n};
-	}
+	$tags .= $self->print_attribute( 'Id',     'Merge_' . $self->get_id() );
+	$tags .= $self->print_attribute( 'DiskId', $self->_get_disk_id() );
+	$tags .=
+	  $self->print_attribute( 'FileCompression',
+		$self->_get_file_compression() );
+	$tags .= $self->print_attribute( 'Language', $self->_get_language() );
+	$tags .=
+	  $self->print_attribute( 'SourceFile', $self->_get_source_file() );
+
+	return qq{<Merge$tags />\n};
 } ## end sub as_string
 
 sub get_namespace {
@@ -88,19 +106,21 @@ __END__
 
 =head1 NAME
 
-WiX3::XML::DirectoryRef - Class representing a DirectoryRef tag.
+WiX3::XML::Merge - Default Merge tag code.
 
 =head1 VERSION
 
-This document describes WiX3::XML::DirectoryRef version 0.009
+This document describes WiX3::XML::Merge version 0.009
 
 =head1 SYNOPSIS
 
-TODO
+	my $fragment = WiX3::XML::Fragment(
+		id => $id,
+	);
   
 =head1 DESCRIPTION
 
-TODO
+This module defines a tag that links a merge module into the installer.
 
 =head1 INTERFACE 
 

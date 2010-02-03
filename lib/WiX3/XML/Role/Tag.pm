@@ -6,9 +6,10 @@ use Params::Util qw( _STRING _NONNEGINT );
 use WiX3::Exceptions;
 require WiX3::XML::ComponentRef;
 require WiX3::XML::FeatureRef;
+require WiX3::XML::MergeRef;
 
-our $VERSION = '0.007';
-$VERSION = eval $VERSION; ## no critic(ProhibitStringyEval)
+our $VERSION = '0.009';
+$VERSION =~ s/_//ms;
 
 #####################################################################
 # Methods
@@ -73,6 +74,10 @@ sub get_componentref_array {
 		return WiX3::XML::FeatureRef->new($self);
 	}
 
+	if ( $self->isa('WiX3::XML::Merge') ) {
+		return WiX3::XML::MergeRef->new($self);
+	}
+
 	if ( 0 == $count ) {
 		return ();
 	}
@@ -119,7 +124,7 @@ WiX3::XML::Role::Tag - Base role for XML tags.
 
 =head1 VERSION
 
-This document describes WiX3::XML::Role::Tag version 0.005
+This document describes WiX3::XML::Role::Tag version 0.009
 
 =head1 SYNOPSIS
 
@@ -144,14 +149,14 @@ This routine is implemented by classes satisfying this role.
 	$string = $tag->as_string_children();
 
 This routine returns a string of XML that contains the tag defined by this 
-object and all child tags, and is used by L<as_string>.
+object and all child tags, and is used by L</as_string>.
 
 =head2 indent
 
 	$string = $tag->indent(4, $string);
 
 This routine indents the string passed in with the given number of spaces, 
-and is used by L<as_string>.
+and is used by L</as_string>.
 
 =head2 get_namespace
 
@@ -178,14 +183,15 @@ This routine is used by Fragment::as_string.
 	@component_array = $tag->get_component_array();
 
 Returns a list of components contained in this tag.  If there are no 
-L<XML::WiX3::Classes::Role::Component> children in this tag, an empty list
-is returned.
+L<XML::WiX3::Classes::Role::Component|XML::WiX3::Classes::Role::Component> 
+children in this tag, an empty list is returned.
 
 =head2 print_attribute
 
 	$attribute_string = $tag->print_attribute('Id', $id);
 
-Returns a string to use when printing the attribute specified within a tag if $id is defined, otherwise, returns an empty, but defined, string.
+Returns a string to use when printing the attribute specified within a tag 
+if $id is defined, otherwise, returns an empty, but defined, string.
 
 This is meant to be used in as_string routines.
 
@@ -193,7 +199,8 @@ This is meant to be used in as_string routines.
 
 The C<indent> and C<print_attribute> routines will throw 
 XWC::Exception::Parameter::Missing and XWC::Exception::Parameter::Invalid 
-objects, which are defined in L<XML::WiX3::Classes::Exceptions>.
+objects, which are defined in 
+L<XML::WiX3::Classes::Exceptions|XML::WiX3::Classes::Exceptions>.
 
 There are no other diagnostics for this role, however, other diagnostics may 
 be used by classes implementing this role.
@@ -216,10 +223,11 @@ Curtis Jewell  C<< <csjewell@cpan.org> >>
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2009, Curtis Jewell C<< <csjewell@cpan.org> >>. All rights reserved.
+Copyright 2009, 2010 Curtis Jewell C<< <csjewell@cpan.org> >>.
 
 This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself. See L<perlartistic>.
+modify it under the same terms as Perl 5.8.1 itself. See L<perlartistic|perlartistic>.
+
 
 =head1 DISCLAIMER OF WARRANTY
 

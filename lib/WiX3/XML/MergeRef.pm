@@ -1,4 +1,4 @@
-package WiX3::XML::DirectoryRef;
+package WiX3::XML::MergeRef;
 
 use 5.008001;
 
@@ -8,71 +8,80 @@ use metaclass (
 	error_class => 'WiX3::Util::Error',
 );
 use Moose;
-use Params::Util qw( _INSTANCE );
-use MooseX::Types::Moose qw( Int Str );
+use Params::Util qw( _INSTANCE _IDENTIFIER );
+use MooseX::Types::Moose qw( Str Maybe );
+use WiX3::Types qw( YesNoType );
 use WiX3::Util::StrictConstructor;
 
 our $VERSION = '0.009';
 $VERSION =~ s/_//ms;
 
-with 'WiX3::XML::Role::TagAllowsChildTags';
-## Allows Component, Directory, Merge as children.
+# http://wix.sourceforge.net/manual-wix3/wix_xsd_mergeref.htm
 
-#####################################################################
-# Accessors:
-#   None.
+with 'WiX3::XML::Role::Tag';
 
-has directory_object => (
+has id => (
 	is       => 'ro',
-	isa      => 'WiX3::XML::Directory',
-	reader   => '_get_directory_object',
+	isa      => Str,
+	reader   => 'get_id',
 	required => 1,
-	weak_ref => 1,
-	handles  => [qw(get_path get_directory_id)],
 );
 
-has diskid => (
-	is     => 'ro',
-	isa    => Int,
-	reader => '_get_diskid',
-);
-
-has filesource => (
-	is     => 'ro',
-	isa    => Str,
-	reader => '_get_filesource',
+has primary => (
+	is      => 'ro',
+	isa     => Maybe [YesNoType],
+	reader  => '_get_primary',
+	default => undef,
 );
 
 #####################################################################
-# Methods to implement the Tag role.
+# Constructor shortcuts.
 
 sub BUILDARGS {
 	my $class = shift;
+	my $id;
 
-	if ( @_ == 1 && _INSTANCE( $_[0], 'WiX3::XML::Directory' ) ) {
-		return { directory_object => $_[0] };
+	if ( @_ == 1 && !ref $_[0] ) {
+		$id = $_[0];
+	} elsif ( _INSTANCE( $_[0], 'WiX3::XML::Merge' ) ) {
+		$id = shift->get_id();
+		## no critic (ProhibitCommaSeparatedStatements)
+		return {
+			'id' => $id,
+			%{ $class->SUPER::BUILDARGS(@_) } };
 	} else {
 		return $class->SUPER::BUILDARGS(@_);
 	}
-}
+
+	if ( not defined $id ) {
+		WiX3::Exception::Parameter::Missing->throw('id');
+	}
+
+	if ( not defined _IDENTIFIER($id) ) {
+		WiX3::Exception::Parameter::Invalid->throw('id');
+	}
+
+	return { 'id' => $id };
+} ## end sub BUILDARGS
+
+
+#####################################################################
+# Methods to implement the Tag role.
 
 
 sub as_string {
 	my $self = shift;
 
-	my $children = $self->has_child_tags();
-	my $tags;
-	$tags = $self->print_attribute( 'Id', $self->get_directory_id() );
-	$tags .= $self->print_attribute( 'DiskId', $self->_get_diskid() );
-	$tags .=
-	  $self->print_attribute( 'FileSource', $self->_get_filesource() );
+	my $id = 'Merge_' . $self->get_id();
 
-	if ($children) {
-		my $child_string = $self->as_string_children();
-		return qq{<DirectoryRef$tags>\n$child_string\n</DirectoryRef>\n};
-	} else {
-		return qq{<DirectoryRef$tags />\n};
-	}
+	# Print tag.
+	my $answer;
+	$answer = '<MergeRef';
+	$answer .= $self->print_attribute( 'Id',      $id );
+	$answer .= $self->print_attribute( 'Primary', $self->_get_primary() );
+	$answer .= " />\n";
+
+	return $answer;
 } ## end sub as_string
 
 sub get_namespace {
@@ -88,11 +97,11 @@ __END__
 
 =head1 NAME
 
-WiX3::XML::DirectoryRef - Class representing a DirectoryRef tag.
+WiX3::XML::MergeRef - Defines a MergeRef tag.
 
 =head1 VERSION
 
-This document describes WiX3::XML::DirectoryRef version 0.009
+This document describes WiX3::XML::FeatureRef version 0.009
 
 =head1 SYNOPSIS
 
@@ -133,7 +142,7 @@ Curtis Jewell  C<< <csjewell@cpan.org> >>
 
 =head1 SEE ALSO
 
-L<Exception::Class|Exception::Class>
+L<http://wix.sourceforge.net/>
 
 =head1 LICENCE AND COPYRIGHT
 
