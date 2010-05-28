@@ -12,10 +12,12 @@ use Params::Util qw( _INSTANCE );
 use MooseX::Types::Moose qw( Int Str );
 use WiX3::Util::StrictConstructor;
 
-our $VERSION = '0.009';
+our $VERSION = '0.009100';
 $VERSION =~ s/_//ms;
 
-with 'WiX3::XML::Role::TagAllowsChildTags';
+with qw(WiX3::XML::Role::TagAllowsChildTags
+  WiX3::Role::Traceable
+);
 ## Allows Component, Directory, Merge as children.
 
 #####################################################################
@@ -92,7 +94,7 @@ WiX3::XML::DirectoryRef - Class representing a DirectoryRef tag.
 
 =head1 VERSION
 
-This document describes WiX3::XML::DirectoryRef version 0.009
+This document describes WiX3::XML::DirectoryRef version 0.009100
 
 =head1 SYNOPSIS
 

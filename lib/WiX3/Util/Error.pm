@@ -6,8 +6,9 @@ use strict;
 use warnings;
 use Readonly qw (Readonly);
 use WiX3::Exceptions;
+use parent 'Moose::Error::Default';
 
-our $VERSION = '0.009';
+our $VERSION = '0.009100';
 $VERSION =~ s/_//ms;
 
 Readonly my %TYPES => ( 'Maybe[Int]' => 'an integer' );
@@ -43,7 +44,7 @@ sub _create_error_carpmess {
 				   [ ] does [ ] not [ ] pass [ ] the 
 				   [ ] type [ ] constraint [ ] because: 
 				   [ ] Validation [ ] failed [ ] for [ ] '(.*)' # $2 = type
-				   [ ] failed [ ] with [ ] value [ ] (.*) # $3 = bad value
+				   (?:[ ] failed)? [ ] with [ ] value [ ] (.*) # $3 = bad value
 				   \z}msx
 	  )
 	{

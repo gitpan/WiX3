@@ -14,7 +14,7 @@ use WiX3::Util::StrictConstructor;
 use Params::Util qw( _IDENTIFIER _STRING );
 use File::Spec::Functions qw( catdir );
 
-our $VERSION = '0.009';
+our $VERSION = '0.009100';
 $VERSION =~ s/_//ms;
 
 with qw(WiX3::XML::Role::TagAllowsChildTags
@@ -176,7 +176,8 @@ sub add_directory {
 	# so subclasses can create more of themselves without
 	# having to override this routine.
 	my $new_dir = $class->new(
-		parent => $self,
+
+#		parent => $self,
 		%args
 	);
 	$self->add_child_tag($new_dir);
@@ -231,7 +232,7 @@ WiX3::XML::Directory - Class representing a Directory tag.
 
 =head1 VERSION
 
-This document describes WiX3::XML::Directory version 0.009
+This document describes WiX3::XML::Directory version 0.009100
 
 =head1 SYNOPSIS
 
