@@ -7,7 +7,7 @@ build_requires:
   Test::UseAllModules: 0.12
 configure_requires:
   Module::Build: 0.33
-generated_by: 'Module::Build version 0.3603'
+generated_by: 'Module::Build version 0.3607'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -16,13 +16,15 @@ name: WiX3
 provides:
   WiX3:
     file: lib/WiX3.pm
-    version: 0.009100
+    version: 0.009102
   WiX3::Exceptions:
     file: lib/WiX3/Exceptions.pm
     version: 0.009100
   WiX3::Role::Traceable:
     file: lib/WiX3/Role/Traceable.pm
-    version: 0.009100
+    version: 0.009101
+  WiX3::Role::Traceable::Saver:
+    file: lib/WiX3/Role/Traceable.pm
   WiX3::Traceable:
     file: lib/WiX3/Traceable.pm
     version: 0.009100
@@ -79,7 +81,7 @@ provides:
     version: 0.009100
   WiX3::XML::Role::Tag:
     file: lib/WiX3/XML/Role/Tag.pm
-    version: 0.009100
+    version: 0.009102
   WiX3::XML::Role::TagAllowsChildTags:
     file: lib/WiX3/XML/Role/TagAllowsChildTags.pm
     version: 0.009100
@@ -92,7 +94,7 @@ requires:
   Data::UUID: 1.202
   Exception::Class: 1.29
   List::MoreUtils: '>= 0.22, != 0.23, != 0.24'
-  Moose: 0.90
+  Moose: '>= 0.90, < 1.09'
   MooseX::Singleton: 0.21
   MooseX::Types: 0.20
   MooseX::Types::Moose: 0
@@ -106,4 +108,4 @@ resources:
   homepage: http://csjewell.comyr.com/perl/
   license: http://dev.perl.org/licenses/
   repository: http://svn.ali.as/cpan/trunk/WiX3/
-version: 0.009100
+version: 0.009102

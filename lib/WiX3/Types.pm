@@ -4,7 +4,9 @@ package                                # Hide from PAUSE.
 use 5.008001;
 use MooseX::Types -declare => [ qw(
 	  Host Tracelevel IsTag _YesNoType YesNoType ComponentGuidType PositiveInt
-	  NonNegativeInt TraceObject EnumRemoveFolderOn
+	  NonNegativeInt TraceObject
+	  EnumRemoveFolderOn EnumEnvironmentAction EnumRegistryKeyAction
+	  EnumRegistryValueType EnumRegistryRootType EnumRegistryValueAction
 	  ) ];
 use Regexp::Common 2.105;
 use MooseX::Types::Moose qw( Str Int Bool HashRef );
@@ -33,6 +35,16 @@ subtype Host, as Str, where {
 };
 
 enum EnumRemoveFolderOn, qw( install uninstall both );
+
+enum EnumEnvironmentAction, qw( create set remove );
+
+enum EnumRegistryKeyAction, qw( create createAndRemoveOnUninstall none );
+
+enum EnumRegistryRootType, qw( HKMU HKCR HKCU HKLM HKU );
+
+enum EnumRegistryValueType, qw( string integer binary expandable multiString );
+
+enum EnumRegistryValueAction, qw( append prepend write );
 
 subtype IsTag, as role_type 'WiX3::XML::Role::Tag';
 
