@@ -1,4 +1,4 @@
-package WiX3::XML::FeatureRef;
+package WiX3::XML::WixVariable;
 
 use 5.008001;
 
@@ -8,27 +8,21 @@ use metaclass (
 	error_class => 'WiX3::Util::Error',
 );
 use Moose;
-use Params::Util qw( _INSTANCE _IDENTIFIER );
-use MooseX::Types::Moose qw( Str Maybe ArrayRef );
-use WiX3::Types qw( YesNoType );
-use WiX3::XML::TagTypes qw( FeatureRefChildTag );
+use Params::Util qw( _STRING  );
+use MooseX::Types::Moose qw( Str );
 use WiX3::Util::StrictConstructor;
+use WiX3::Types qw( YesNoType );
 
 our $VERSION = '0.010';
 $VERSION =~ s/_//ms;
 
-# http://wix.sourceforge.net/manual-wix3/wix_xsd_featureref.htm
+## No children allowed.
+with 'WiX3::XML::Role::Tag';
 
-with qw(WiX3::XML::Role::TagAllowsChildTags);
+# http://wix.sourceforge.net/manual-wix3/wix_xsd_wixvariable.htm
 
-## Allows Component, ComponentGroupRef, ComponentRef, Feature,
-## FeatureGroup, FeatureGroupRef, FeatureRef, MergeRef.
-
-## FeatureRefChildTag allows Component, ComponentRef, Feature, FeatureRef,
-## and MergeRef at the moment.
-
-has '+child_tags' => ( isa => ArrayRef [FeatureRefChildTag] );
-
+#####################################################################
+# Accessors
 
 has id => (
 	is       => 'ro',
@@ -37,59 +31,46 @@ has id => (
 	required => 1,
 );
 
-has ignoreparent => (
+has overridable => (
 	is      => 'ro',
-	isa     => Maybe [YesNoType],
-	reader  => '_get_ignoreparent',
+	isa     => YesNoType,
+	reader  => '_get_overridable',
 	default => undef,
+	coerce  => 1,
 );
 
-#####################################################################
-# Constructor shortcuts.
-
-sub BUILDARGS {
-	my $class = shift;
-	my $id;
-
-	if ( @_ == 1 && !ref $_[0] ) {
-		$id = $_[0];
-	} elsif ( @_ == 1 && _INSTANCE( $_[0], 'WiX3::XML::Feature' ) ) {
-		$id = $_[0]->get_id();
-	} else {
-		return $class->SUPER::BUILDARGS(@_);
-	}
-
-	if ( not defined $id ) {
-		WiX3::Exception::Parameter::Missing->throw('id');
-	}
-
-	if ( not defined _IDENTIFIER($id) ) {
-		WiX3::Exception::Parameter::Invalid->throw('id');
-	}
-
-	return { 'id' => $id };
-} ## end sub BUILDARGS
-
+has value => (
+	is       => 'ro',
+	isa      => Str,
+	reader   => '_get_value',
+	required => 1,
+);
 
 #####################################################################
 # Methods to implement the Tag role.
 
-
-# TODO: Handle children.
 sub as_string {
 	my $self = shift;
 
-	my $id = 'Feat_' . $self->get_id();
-
 	# Print tag.
-	my $answer;
-	$answer = '<FeatureRef';
-	$answer .= $self->print_attribute( 'Id', $id );
-	$answer .=
-	  $self->print_attribute( 'IgnoreParent', $self->_get_ignoreparent() );
-	$answer .= " />\n";
+	my $string = '<WixVariable';
 
-	return $answer;
+	my @attribute = (
+		[ 'Id'          => $self->get_id(), ],
+		[ 'Overridable' => $self->_get_overridable(), ],
+		[ 'Value'       => $self->_get_value(), ],
+	);
+
+	my ( $k, $v );
+
+	foreach my $ref (@attribute) {
+		( $k, $v ) = @{$ref};
+		$string .= $self->print_attribute( $k, $v );
+	}
+
+	$string .= qq{ />\n};
+
+	return $string;
 } ## end sub as_string
 
 sub get_namespace {
@@ -97,7 +78,7 @@ sub get_namespace {
 }
 
 no Moose;
-__PACKAGE__->meta->make_immutable;
+__PACKAGE__->meta()->make_immutable();
 
 1;
 
@@ -105,11 +86,11 @@ __END__
 
 =head1 NAME
 
-WiX3::XML::FeatureRef - Defines a FeatureRef tag.
+WiX3::XML::WixVariable - Defines a WixVariable tag.
 
 =head1 VERSION
 
-This document describes WiX3::XML::FeatureRef version 0.009100
+This document describes WiX3::XML::WixVariable version 0.010
 
 =head1 SYNOPSIS
 

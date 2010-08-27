@@ -9,16 +9,21 @@ use metaclass (
 );
 use Moose;
 use Params::Util qw( _INSTANCE );
-use MooseX::Types::Moose qw( Int Str );
+use MooseX::Types::Moose qw( Int Str ArrayRef );
+use WiX3::XML::TagTypes qw( DirectoryRefChildTag DirectoryTag );
 use WiX3::Util::StrictConstructor;
 
-our $VERSION = '0.009100';
+our $VERSION = '0.010';
 $VERSION =~ s/_//ms;
 
 with qw(WiX3::XML::Role::TagAllowsChildTags
   WiX3::Role::Traceable
 );
+
 ## Allows Component, Directory, Merge as children.
+
+has '+child_tags' => ( isa => ArrayRef [DirectoryRefChildTag] );
+
 
 #####################################################################
 # Accessors:
@@ -26,7 +31,7 @@ with qw(WiX3::XML::Role::TagAllowsChildTags
 
 has directory_object => (
 	is       => 'ro',
-	isa      => 'WiX3::XML::Directory',
+	isa      => DirectoryTag,
 	reader   => '_get_directory_object',
 	required => 1,
 	weak_ref => 1,

@@ -9,8 +9,6 @@ sub ACTION_authortest {
     my ($self) = @_;
 
     $self->depends_on('build');
-    $self->depends_on('manifest');
-    $self->depends_on('distmeta');
 
     $self->test_files( qw< t xt/author > );
     $self->depends_on('test');
@@ -23,8 +21,6 @@ sub ACTION_releasetest {
     my ($self) = @_;
 
     $self->depends_on('build');
-    $self->depends_on('manifest');
-    $self->depends_on('distmeta');
 
     $self->test_files( qw< t xt/author xt/release > );
     $self->depends_on('test');
@@ -42,6 +38,15 @@ sub ACTION_manifest {
 
     return $self->SUPER::ACTION_manifest(@arguments);
 }
+
+
+sub ACTION_distmeta {
+    my ($self) = @_;
+	
+    $self->depends_on('manifest');
+	
+    return $self->SUPER::ACTION_distmeta();
+}
 END_CODE
 );
 
@@ -54,6 +59,7 @@ my $builder = $class->new(
 	create_makefile_pl   => 'small',
 	create_license       => 1,
 	create_readme        => 1,
+	# Do not remove. Directories in t/ require it.
 	recursive_test_files => 1,
 	configure_requires => {
 		'Module::Build'            => '0.33',
@@ -69,9 +75,8 @@ my $builder = $class->new(
 		'List::MoreUtils'          => '>= 0.22, != 0.23, != 0.24',
 		'Data::UUID'               => '1.202',
 		'Params::Util'             => '1.00',
-		# Temporary fix until we update things for Moose 1.09.
-		'Moose'                    => '>= 0.90, < 1.09',
-		'MooseX::Singleton'        => '0.21',
+		'Moose'                    => '1.08',
+		'MooseX::Singleton'        => '0.24',
 		'MooseX::Types'            => '0.20',
 		'MooseX::Types::Moose'     => 0,
 		'Regexp::Common'           => '2.122',

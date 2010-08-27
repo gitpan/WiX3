@@ -10,7 +10,8 @@ use metaclass (
 use Moose;
 use Params::Util qw( _STRING _IDENTIFIER );
 use WiX3::Types qw( YesNoType ComponentGuidType );
-use MooseX::Types::Moose qw( Str Maybe Int );
+use WiX3::XML::TagTypes qw( ComponentChildTag );
+use MooseX::Types::Moose qw( Str Maybe Int ArrayRef );
 use WiX3::Util::StrictConstructor;
 
 our $VERSION = '0.009100';
@@ -23,6 +24,11 @@ with qw(WiX3::XML::Role::TagAllowsChildTags
   WiX3::Role::Traceable
 );
 
+## Environment, File, RegistryKey, RegistryValue, RemoveFolder, Shortcut
+## are ComponentChildTags at the moment.
+
+has '+child_tags' => ( isa => ArrayRef [ComponentChildTag] );
+
 ## Allows lots of children: Choice of elements AppId, Category, Class,
 ## Condition, CopyFile, CreateFolder, Environment, Extension, File, IniFile,
 ## Interface, IsolateComponent, ODBCDataSource, ODBCDriver, ODBCTranslator,
@@ -33,7 +39,6 @@ with qw(WiX3::XML::Role::TagAllowsChildTags
 
 #####################################################################
 # Accessors:
-#   None.
 
 has id => (
 	is      => 'ro',

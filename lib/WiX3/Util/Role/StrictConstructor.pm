@@ -1,13 +1,15 @@
 package                                # Hide from PAUSE.
   WiX3::Util::Role::StrictConstructor;
 
+# Corresponds to MooseX::StrictConstructor::Role::Object
+
 use 5.008001;
 use strict;
 use warnings;
 use Moose::Role;
 use WiX3::Exceptions;
 
-our $VERSION = '0.009100';
+our $VERSION = '0.010';
 $VERSION =~ s/_//ms;
 
 after 'BUILDALL' => sub {
@@ -15,9 +17,10 @@ after 'BUILDALL' => sub {
 	my $params = shift;
 
 	my %attrs = (
+		__INSTANCE__ => 1,
 		map { $_ => 1 }
-		grep {defined}
-		map  { $_->init_arg() } $self->meta()->get_all_attributes() );
+		  grep {defined}
+		  map  { $_->init_arg() } $self->meta()->get_all_attributes() );
 
 	my @bad = sort grep { !$attrs{$_} } keys %{$params};
 

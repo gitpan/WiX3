@@ -8,13 +8,14 @@ use metaclass (
 	error_class => 'WiX3::Util::Error',
 );
 use Moose;
-use MooseX::Types::Moose qw( Int Str Maybe );
+use MooseX::Types::Moose qw( Int Str Maybe ArrayRef );
 use WiX3::Types qw( ComponentGuidType );
+use WiX3::XML::TagTypes qw( DirectoryChildTag );
 use WiX3::Util::StrictConstructor;
 use Params::Util qw( _IDENTIFIER _STRING );
 use File::Spec::Functions qw( catdir );
 
-our $VERSION = '0.009100';
+our $VERSION = '0.010';
 $VERSION =~ s/_//ms;
 
 with qw(WiX3::XML::Role::TagAllowsChildTags
@@ -23,6 +24,10 @@ with qw(WiX3::XML::Role::TagAllowsChildTags
 );
 
 ## Allows Component, Directory, Merge, and SymbolPath as children.
+## SymbolPath will need added later.
+
+has '+child_tags' => ( isa => ArrayRef [DirectoryChildTag] );
+
 
 #####################################################################
 # Accessors:
