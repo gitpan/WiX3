@@ -16,7 +16,7 @@ name: WiX3
 provides:
   WiX3:
     file: lib/WiX3.pm
-    version: 0.010001
+    version: 0.010002
   WiX3::Exceptions:
     file: lib/WiX3/Exceptions.pm
     version: 0.009100
@@ -28,7 +28,7 @@ provides:
     version: 0.009100
   WiX3::XML::Component:
     file: lib/WiX3/XML/Component.pm
-    version: 0.009100
+    version: 0.010002
   WiX3::XML::ComponentRef:
     file: lib/WiX3/XML/ComponentRef.pm
     version: 0.009100
@@ -43,7 +43,7 @@ provides:
     version: 0.010
   WiX3::XML::Directory:
     file: lib/WiX3/XML/Directory.pm
-    version: 0.010
+    version: 0.010002
   WiX3::XML::DirectoryRef:
     file: lib/WiX3/XML/DirectoryRef.pm
     version: 0.010
@@ -58,7 +58,7 @@ provides:
     version: 0.010
   WiX3::XML::File:
     file: lib/WiX3/XML/File.pm
-    version: 0.010
+    version: 0.010002
   WiX3::XML::Fragment:
     file: lib/WiX3/XML/Fragment.pm
     version: 0.009100
@@ -79,13 +79,13 @@ provides:
     version: 0.009100
   WiX3::XML::Property:
     file: lib/WiX3/XML/Property.pm
-    version: 0.010
+    version: 0.010002
   WiX3::XML::RegistryKey:
     file: lib/WiX3/XML/RegistryKey.pm
-    version: 0.009102
+    version: 0.010002
   WiX3::XML::RegistryValue:
     file: lib/WiX3/XML/RegistryValue.pm
-    version: 0.009102
+    version: 0.010002
   WiX3::XML::RemoveFolder:
     file: lib/WiX3/XML/RemoveFolder.pm
     version: 0.009100
@@ -97,7 +97,7 @@ provides:
     version: 0.009100
   WiX3::XML::Role::InnerText:
     file: lib/WiX3/XML/Role/InnerText.pm
-    version: 0.010
+    version: 0.010002
   WiX3::XML::Role::Tag:
     file: lib/WiX3/XML/Role/Tag.pm
     version: 0.009102
@@ -129,4 +129,4 @@ resources:
   homepage: http://csjewell.comyr.com/perl/
   license: http://dev.perl.org/licenses/
   repository: http://svn.ali.as/cpan/trunk/WiX3/
-version: 0.010001
+version: 0.010002

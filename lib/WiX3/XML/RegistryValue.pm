@@ -18,10 +18,10 @@ use Moose;
 use Params::Util qw( _IDENTIFIER _STRING );
 use WiX3::Types
   qw( YesNoType EnumRegistryRootType EnumRegistryValueType EnumRegistryValueAction );
-use MooseX::Types::Moose qw( Str Maybe Bool );
+use MooseX::Types::Moose qw( Str Maybe Bool Undef );
 use WiX3::Util::StrictConstructor;
 
-our $VERSION = '0.009102';
+our $VERSION = '0.010002';
 $VERSION =~ s/_//ms;
 
 # http://wix.sourceforge.net/manual-wix3/wix_xsd_registryvalue.htm
@@ -61,10 +61,12 @@ has action => (
 );
 
 has key_path => (
-	is      => 'ro',
-	isa     => YesNoType,
-	reader  => '_get_key_path',
-	default => 'no',
+	is     => 'ro',
+	isa    => YesNoType | Undef,
+	reader => '_get_key_path',
+
+#	default => 'no',
+	coerce => 1,
 );
 
 has type => (
@@ -117,10 +119,10 @@ sub as_string {
 	}
 
 	if ( 'multiString' eq $type ) {
+		$string .= qq{>$value</RegistryValue>\n};
+	} else {
 		$string .= $self->print_attribute( 'Value', $value );
 		$string .= qq{ />\n};
-	} else {
-		$string .= qq{>$value</RegistryValue>\n};
 	}
 
 	return $string;
