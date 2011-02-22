@@ -1,4 +1,4 @@
-WiX3 Version 0.010002
+WiX3 Version 0.010003
 
 DESCRIPTION
     This distribution is designed to assist in writing XML files for Windows
@@ -31,14 +31,15 @@ INSTALLATION
             ./Build install
 
 DEPENDENCIES
-    Moose, Exception::Class (more to add later)
+    Moose, Exception::Class, List::MoreUtils, Data::UUID, Params::Util,
+    MooseX::Singleton, MooseX::Types, Regexp::Common, and Readonly.
 
 WARNING
     This distribution is not nearly complete yet - it is still in an alpha
     state.
 
 LICENCE AND COPYRIGHT
-    Copyright 2009, 2010 Curtis Jewell `<csjewell@cpan.org>'.
+    Copyright 2009, 2010, 2011 Curtis Jewell `<csjewell@cpan.org>'.
 
     This module is free software; you can redistribute it and/or modify it
     under the same terms as Perl 5.8.1 itself. See perlartistic.

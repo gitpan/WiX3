@@ -7,7 +7,8 @@ build_requires:
   Test::UseAllModules: 0.12
 configure_requires:
   Module::Build: 0.33
-generated_by: 'Module::Build version 0.3607'
+dynamic_config: 1
+generated_by: 'Module::Build version 0.3705, CPAN::Meta::Converter version 2.110440'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -16,7 +17,7 @@ name: WiX3
 provides:
   WiX3:
     file: lib/WiX3.pm
-    version: 0.010002
+    version: 0.010003
   WiX3::Exceptions:
     file: lib/WiX3/Exceptions.pm
     version: 0.009100
@@ -115,7 +116,7 @@ recommends:
 requires:
   Data::UUID: 1.202
   Exception::Class: 1.29
-  List::MoreUtils: '>= 0.22, != 0.23, != 0.24'
+  List::MoreUtils: 0
   Moose: 1.14
   MooseX::Singleton: 0.25
   MooseX::Types: 0.24
@@ -126,7 +127,7 @@ requires:
   perl: 5.008001
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=WiX3
-  homepage: http://csjewell.comyr.com/perl/
+  homepage: http://perl.curtisjewell.name/
   license: http://dev.perl.org/licenses/
-  repository: http://svn.ali.as/cpan/trunk/WiX3/
-version: 0.010002
+  repository: http://hg.curtisjewell.name/WiX3
+version: 0.010003
