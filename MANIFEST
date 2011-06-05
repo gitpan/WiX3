@@ -10,9 +10,8 @@ lib/WiX3/Trace/Object.pm
 lib/WiX3/Traceable.pm
 lib/WiX3/Types.pm
 lib/WiX3/Util/Error.pm
-lib/WiX3/Util/Role/StrictConstructor.pm
-lib/WiX3/Util/Role/StrictConstructorMeta.pm
 lib/WiX3/Util/StrictConstructor.pm
+lib/WiX3/Util/Trait/StrictConstructor/Class.pm
 lib/WiX3/XML/Component.pm
 lib/WiX3/XML/ComponentRef.pm
 lib/WiX3/XML/CreateFolder.pm

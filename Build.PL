@@ -69,15 +69,17 @@ my $builder = $class->new(
 		'Test::UseAllModules'      => '0.12',
 	},
 	requires => {
-		'perl'                     => 5.008001,
+		'perl'                     => 5.008003, # Because Moose 2.0001 requires it.
 		'parent'                   => '0.221',
 		'Exception::Class'         => '1.29',
 		'List::MoreUtils'          => '>= 0.22, != 0.23, != 0.24',
 		'Data::UUID'               => '1.202',
-		'Params::Util'             => '1.00',
-		'Moose'                    => '1.14',
-		'MooseX::Singleton'        => '0.25',
-		'MooseX::Types'            => '0.24',
+		'Dist::CheckConflicts'     => '0.02', # Help out a bit...
+ 		'Params::Util'             => '1.00',
+		'Moose'                    => '2.00',
+ 		'MooseX::Singleton'        => '0.25',
+ 		'MooseX::Types'            => '0.24',
+		'namespace::autoclean'     => '0.08',
 		'Regexp::Common'           => '2.122',
 		'Readonly'                 => '1.03',
 	},
@@ -86,7 +88,7 @@ my $builder = $class->new(
 	},
 	meta_merge     => {
 		resources => {
-			homepage    => 'http://perl.curtisjewell.name/',
+			homepage    => 'http://csjewell.comyr.com/',
 			bugtracker  => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=WiX3',
 			repository  => 'http://hg.curtisjewell.name/WiX3',
 		},
